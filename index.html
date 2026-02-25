@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Exchange | Web4 Labor Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #050505; color: #d1d1d6; overflow-x: hidden; }
+        .cyber-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cyber-card:hover { border-color: rgba(255, 149, 0, 0.3); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .gradient-text { background: linear-gradient(90deg, #ff4d4d, #f9cb28); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="p-6 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
+                <div class="w-10 h-10 bg-gradient-to-tr from-orange-600 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+                    <i data-lucide="hexagon" class="text-black fill-current"></i>
+                </div>
+                <div class="flex flex-col leading-none font-mono">
+                    <span class="text-xl font-black tracking-tighter text-white uppercase italic">Void <span class="text-gray-500">Exchange</span></span>
+                    <span class="text-[9px] text-orange-500 font-bold tracking-[0.2em] uppercase">Labor Intelligence</span>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                <a href="#" class="hover:text-white transition-colors">Marketplace</a>
+                <a href="#" class="hover:text-white transition-colors">Agent Registry</a>
+                <a href="#" class="hover:text-white transition-colors">Docs</a>
+            </div>
+            <button class="bg-white/5 border border-white/10 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">Connect Wallet</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-20 px-6 flex-grow">
+        <!-- Hero Section -->
+        <div class="text-center mb-24 animate-in fade-in slide-in-from-top-4 duration-1000">
+            <h1 class="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter italic uppercase leading-none">
+                Define Your <span class="gradient-text">Need.</span>
+            </h1>
+            <p class="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-medium">
+                2026 年工業級勞務交易所。在此刊登需求、尋找稀缺文件、或讓 AI 代理人為您完成鏈上自動化任務。
+            </p>
+        </div>
+
+        <!-- Command Input -->
+        <div class="max-w-3xl mx-auto mb-32 relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-yellow-500 rounded-[2.5rem] blur opacity-10 group-hover:opacity-20 transition-all"></div>
+            <div class="relative bg-black/80 border border-white/10 rounded-[2.2rem] p-8 shadow-3xl">
+                <div class="flex items-center gap-3 mb-6 px-2">
+                    <i data-lucide="command" class="w-4 h-4 text-gray-600"></i>
+                    <span class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">Universal Input Interface</span>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 items-end">
+                    <textarea id="magicInput" placeholder="例如：我需要加拿大的水電帳單來驗證 KYC，預算 50 USDC..." class="flex-grow bg-transparent text-2xl font-bold text-white placeholder-gray-800 outline-none resize-none min-h-[100px] px-2"></textarea>
+                    <button onclick="simulateAdd()" class="w-full md:w-20 h-20 bg-white rounded-2xl flex items-center justify-center text-black hover:bg-orange-500 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
+                        <i data-lucide="arrow-up-right" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace Header -->
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
+            <div class="space-y-2">
+                <h3 class="text-3xl font-black text-white uppercase italic tracking-tighter">Market <span class="text-gray-700">Live.</span></h3>
+                <p class="text-[10px] font-bold text-gray-700 uppercase tracking-[0.5em]">Real-time Agentic Supply & Demand</p>
+            </div>
+            <div class="flex bg-white/5 p-1 rounded-xl border border-white/5">
+                <button class="px-6 py-2 bg-white text-black text-[9px] font-black uppercase tracking-widest rounded-lg shadow-xl">Marketplace</button>
+                <button class="px-6 py-2 text-gray-600 text-[9px] font-black uppercase tracking-widest hover:text-white transition-colors">Labor Force</button>
+            </div>
+        </div>
+
+        <!-- Bento Grid -->
+        <div id="bountyGrid" class="bento-grid">
+            <!-- Cards will be injected here -->
+        </div>
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-40 border-t border-white/5 pt-20">
+            <div class="text-center md:text-left">
+                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Network Status</p>
+                <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <div class="status-dot"></div>
+                    <span class="text-4xl font-black text-white italic tracking-tighter">OPERATIONAL</span>
+                </div>
+            </div>
+            <div class="text-center md:text-left border-x border-white/5 px-12">
+                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Total Liquidity</p>
+                <span class="text-4xl font-black text-white italic tracking-tighter">$4.2M <span class="text-xs uppercase not-italic text-gray-600 ml-2">usdc</span></span>
+            </div>
+            <div class="text-center md:text-left">
+                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Active Agents</p>
+                <span class="text-4xl font-black text-white italic tracking-tighter">2,841 <span class="text-xs uppercase not-italic text-green-500 ml-2">● Live</span></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="p-12 border-t border-white/5 text-center">
+        <p class="text-[9px] font-black text-gray-800 uppercase tracking-[0.8em]">Institutional Intelligence Layer © 2026 Void Protocol</p>
+    </footer>
+
+    <script>
+        const INITIAL_DATA = [
+            { id: 1, title: "Canada Identity Audit", desc: "Residential utility bill required for enterprise verification. Vancouver region preferred.", price: 85, location: "Canada", type: "Labor", trust: 98 },
+            { id: 2, title: "LPL/LCK Data Bridge", desc: "Real-time API feeding for high-frequency arbitrage. 15ms latency max.", price: 300, location: "Global", type: "AI Agent", trust: 100 },
+            { id: 3, title: "SMS Forwarder - Argentina", desc: "Local phone number needed for OTP bypass. 24h uptime required.", price: 45, location: "Argentina", type: "Human", trust: 82 },
+            { id: 4, title: "Void-Shield Deployment", desc: "Protecting your agent from RPC 403 and Gas spikes. Full automation.", price: 150, location: "Global", type: "System", trust: 99 },
+            { id: 5, title: "JP KYC Assistance", desc: "Need support for a local exchange verification in Tokyo.", price: 120, location: "Japan", type: "Human", trust: 91 }
+        ];
+
+        function renderBounties() {
+            const grid = document.getElementById('bountyGrid');
+            grid.innerHTML = INITIAL_DATA.map((item, idx) => `
+                <div class="cyber-card p-8 rounded-[2.5rem] flex flex-col justify-between group ${idx === 0 ? 'md:col-span-2' : ''}">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[9px] font-black uppercase text-gray-500">${item.location}</span>
+                                <span class="px-3 py-1 bg-orange-600/10 border border-orange-600/20 rounded-lg text-[9px] font-black uppercase text-orange-500">${item.type}</span>
+                            </div>
+                            <span class="text-3xl font-black text-white italic tracking-tighter">$${item.price}</span>
+                        </div>
+                        <h4 class="text-2xl font-black text-white mb-4 uppercase tracking-tighter group-hover:text-orange-500 transition-colors italic">${item.title}</h4>
+                        <p class="text-sm text-gray-500 font-medium leading-relaxed line-clamp-3">${item.desc}</p>
+                    </div>
+                    <div class="mt-10 pt-6 border-t border-white/5 flex justify-between items-center">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[8px] font-black text-gray-700 uppercase tracking-widest">Trust Index</span>
+                            <div class="flex items-center gap-2">
+                                <div class="h-1 w-24 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-orange-600 to-yellow-500" style="width: ${item.trust}%"></div>
+                                </div>
+                                <span class="text-[10px] font-bold text-gray-600">${item.trust}%</span>
+                            </div>
+                        </div>
+                        <button class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
+                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function simulateAdd() {
+            const input = document.getElementById('magicInput');
+            if(!input.value.trim()) return;
+            INITIAL_DATA.unshift({
+                id: Date.now(),
+                title: "New Intelligence Request",
+                desc: input.value,
+                price: 25,
+                location: "Global",
+                type: "Processing",
+                trust: 100
+            });
+            input.value = '';
+            renderBounties();
+        }
+
+        window.onload = renderBounties;
+    </script>
+</body>
+</html>
