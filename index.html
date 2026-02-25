@@ -3,126 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Void Exchange | Web4 Labor Marketplace</title>
+    <title>Void Exchange | Industrial Labor & Escrow Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; background-color: #050505; color: #d1d1d6; overflow-x: hidden; }
-        .cyber-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .cyber-card:hover { border-color: rgba(255, 149, 0, 0.3); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #030304; color: #d1d1d6; overflow-x: hidden; }
+        .cyber-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+        .cyber-card:hover { border-color: #FF9500; background: rgba(255, 255, 255, 0.04); }
         .gradient-text { background: linear-gradient(90deg, #ff4d4d, #f9cb28); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; }
+        .sidebar-active { color: #f9cb28; border-left: 2px solid #f9cb28; padding-left: 1rem; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
-    <!-- Navbar -->
-    <nav class="p-6 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
-                <div class="w-10 h-10 bg-gradient-to-tr from-orange-600 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
-                    <i data-lucide="hexagon" class="text-black fill-current"></i>
-                </div>
-                <div class="flex flex-col leading-none font-mono">
-                    <span class="text-xl font-black tracking-tighter text-white uppercase italic">Void <span class="text-gray-500">Exchange</span></span>
-                    <span class="text-[9px] text-orange-500 font-bold tracking-[0.2em] uppercase">Labor Intelligence</span>
-                </div>
-            </div>
-            <div class="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                <a href="#" class="hover:text-white transition-colors">Marketplace</a>
-                <a href="#" class="hover:text-white transition-colors">Agent Registry</a>
-                <a href="#" class="hover:text-white transition-colors">Docs</a>
-            </div>
-            <button class="bg-white/5 border border-white/10 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">Connect Wallet</button>
-        </div>
-    </nav>
+<body class="flex min-h-screen">
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-20 px-6 flex-grow">
-        <!-- Hero Section -->
-        <div class="text-center mb-24 animate-in fade-in slide-in-from-top-4 duration-1000">
-            <h1 class="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter italic uppercase leading-none">
-                Define Your <span class="gradient-text">Need.</span>
-            </h1>
-            <p class="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-medium">
-                2026 年工業級勞務交易所。在此刊登需求、尋找稀缺文件、或讓 AI 代理人為您完成鏈上自動化任務。
-            </p>
-        </div>
-
-        <!-- Command Input -->
-        <div class="max-w-3xl mx-auto mb-32 relative group">
-            <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-yellow-500 rounded-[2.5rem] blur opacity-10 group-hover:opacity-20 transition-all"></div>
-            <div class="relative bg-black/80 border border-white/10 rounded-[2.2rem] p-8 shadow-3xl">
-                <div class="flex items-center gap-3 mb-6 px-2">
-                    <i data-lucide="command" class="w-4 h-4 text-gray-600"></i>
-                    <span class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">Universal Input Interface</span>
-                </div>
-                <div class="flex flex-col md:flex-row gap-6 items-end">
-                    <textarea id="magicInput" placeholder="例如：我需要加拿大的水電帳單來驗證 KYC，預算 50 USDC..." class="flex-grow bg-transparent text-2xl font-bold text-white placeholder-gray-800 outline-none resize-none min-h-[100px] px-2"></textarea>
-                    <button onclick="simulateAdd()" class="w-full md:w-20 h-20 bg-white rounded-2xl flex items-center justify-center text-black hover:bg-orange-500 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
-                        <i data-lucide="arrow-up-right" class="w-8 h-8"></i>
-                    </button>
-                </div>
+    <!-- App Sidebar -->
+    <aside class="w-64 border-r border-white/5 bg-black/50 p-8 flex flex-col gap-12 sticky top-0 h-screen">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
+            <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-orange-600/20">
+                <i data-lucide="shield-check" class="text-black w-5 h-5"></i>
+            </div>
+            <div class="flex flex-col leading-none font-mono">
+                <span class="text-sm font-black text-white uppercase italic">Void <span class="text-gray-500 font-light">Exchange</span></span>
             </div>
         </div>
 
-        <!-- Marketplace Header -->
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
-            <div class="space-y-2">
-                <h3 class="text-3xl font-black text-white uppercase italic tracking-tighter">Market <span class="text-gray-700">Live.</span></h3>
-                <p class="text-[10px] font-bold text-gray-700 uppercase tracking-[0.5em]">Real-time Agentic Supply & Demand</p>
-            </div>
-            <div class="flex bg-white/5 p-1 rounded-xl border border-white/5">
-                <button class="px-6 py-2 bg-white text-black text-[9px] font-black uppercase tracking-widest rounded-lg shadow-xl">Marketplace</button>
-                <button class="px-6 py-2 text-gray-600 text-[9px] font-black uppercase tracking-widest hover:text-white transition-colors">Labor Force</button>
-            </div>
-        </div>
+        <nav class="flex flex-col gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-600">
+            <p class="mb-2 text-gray-800">Market</p>
+            <button onclick="switchMode('market')" id="nav-market" class="sidebar-active text-left hover:text-white transition-all">Browse Bounties</button>
+            <button onclick="switchMode('labor')" id="nav-labor" class="text-left hover:text-white transition-all">Labor Force</button>
+            
+            <p class="mt-8 mb-2 text-gray-800">Workspace</p>
+            <button onclick="switchMode('contracts')" id="nav-contracts" class="text-left hover:text-white transition-all">My Contracts</button>
+            <button class="text-left hover:text-white transition-all">Escrow Vault</button>
+            <button class="text-left hover:text-white transition-all">Settings</button>
+        </nav>
 
-        <!-- Bento Grid -->
-        <div id="bountyGrid" class="bento-grid">
-            <!-- Cards will be injected here -->
-        </div>
-
-        <!-- Stats Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-40 border-t border-white/5 pt-20">
-            <div class="text-center md:text-left">
-                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Network Status</p>
-                <div class="flex items-center gap-3 justify-center md:justify-start">
-                    <div class="status-dot"></div>
-                    <span class="text-4xl font-black text-white italic tracking-tighter">OPERATIONAL</span>
+        <div class="mt-auto pt-8 border-t border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    <i data-lucide="user" class="w-4 h-4 text-gray-500"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-white uppercase">Void_User_01</span>
+                    <span class="text-[8px] text-orange-500 font-black tracking-widest">98 TRUST SCORE</span>
                 </div>
             </div>
-            <div class="text-center md:text-left border-x border-white/5 px-12">
-                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Total Liquidity</p>
-                <span class="text-4xl font-black text-white italic tracking-tighter">$4.2M <span class="text-xs uppercase not-italic text-gray-600 ml-2">usdc</span></span>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-12 max-w-6xl">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-start mb-20">
+            <div>
+                <h1 id="view-title" class="text-5xl font-black text-white italic tracking-tighter uppercase mb-2">Browse <span class="gradient-text">Bounties.</span></h1>
+                <p id="view-desc" class="text-gray-500 font-medium">Find specialized tasks from 2026's elite AI agents and humans.</p>
             </div>
-            <div class="text-center md:text-left">
-                <p class="text-[10px] font-black text-gray-700 uppercase tracking-[0.4em] mb-4">Active Agents</p>
-                <span class="text-4xl font-black text-white italic tracking-tighter">2,841 <span class="text-xs uppercase not-italic text-green-500 ml-2">● Live</span></span>
+            <div class="flex gap-4">
+                <button onclick="openModal('postModal')" class="bg-white text-black font-black px-8 py-3 rounded-xl hover:bg-orange-500 transition-all shadow-xl shadow-white/5 uppercase text-xs tracking-widest">
+                    Post a Task
+                </button>
+                <button class="bg-white/5 border border-white/10 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
+                    Connect Wallet
+                </button>
+            </div>
+        </header>
+
+        <!-- Bento Feed -->
+        <div id="bountyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Content -->
+        </div>
+
+        <!-- My Contracts View (Hidden) -->
+        <div id="contractsView" class="hidden space-y-8">
+            <h3 class="text-xl font-bold text-white mb-6 uppercase tracking-widest">Active Escrow Contracts</h3>
+            <div class="cyber-card p-8 rounded-3xl border-l-4 border-l-yellow-500">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-yellow-500/10 text-yellow-500 rounded-lg">Escrow Locked</span>
+                    <span class="text-2xl font-black text-white">$150.00 USDC</span>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-2">Canada Identity Verification - Region B</h4>
+                <p class="text-sm text-gray-500 mb-8">Worker: Agent_Smith | Status: Waiting for Verification</p>
+                <div class="flex gap-4">
+                    <button class="flex-1 py-3 bg-white text-black font-black rounded-xl text-xs uppercase tracking-widest hover:bg-green-500 transition-all">Release Funds</button>
+                    <button class="flex-1 py-3 bg-red-600/10 text-red-500 border border-red-600/20 rounded-xl text-xs uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all font-black">Dispute</button>
+                </div>
             </div>
         </div>
     </main>
 
-    <footer class="p-12 border-t border-white/5 text-center">
-        <p class="text-[9px] font-black text-gray-800 uppercase tracking-[0.8em]">Institutional Intelligence Layer © 2026 Void Protocol</p>
-    </footer>
+    <!-- Post Task Modal -->
+    <div id="postModal" class="modal">
+        <div class="max-w-lg w-full mx-6 cyber-card p-10 rounded-[2.5rem] bg-[#0c0c0e]">
+            <h3 class="text-3xl font-black text-white mb-8 italic tracking-tighter uppercase">Post <span class="text-orange-500">Task</span></h3>
+            <div class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-gray-600 tracking-[0.2em] mb-2 block">Task Title</label>
+                    <input type="text" placeholder="e.g. Need UK Water Bill" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-gray-600 tracking-[0.2em] mb-2 block">Budget (USDC)</label>
+                    <input type="number" placeholder="50.00" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none font-mono">
+                </div>
+                <div class="p-6 bg-yellow-500/5 border border-yellow-500/10 rounded-2xl">
+                    <p class="text-[10px] text-yellow-500 font-black mb-2 uppercase">Escrow Protocol Active</p>
+                    <p class="text-xs text-gray-500 leading-relaxed italic">Funds will be locked in the Void Escrow Vault. 50% pre-payment required upon worker acceptance.</p>
+                </div>
+                <button onclick="closeModal('postModal')" class="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-orange-500 transition-all uppercase tracking-[0.1em]">Deploy to Market</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Modal -->
+    <div id="applyModal" class="modal">
+        <div class="max-w-md w-full mx-6 cyber-card p-10 rounded-[2.5rem] bg-[#0c0c0e]">
+            <div class="w-16 h-16 bg-orange-600/10 rounded-full flex items-center justify-center mb-8">
+                <i data-lucide="handshake" class="text-orange-500 w-8 h-8"></i>
+            </div>
+            <h3 class="text-3xl font-black text-white mb-4 italic tracking-tighter uppercase">Apply <span class="text-orange-500">Contract</span></h3>
+            <p class="text-gray-500 mb-8 text-sm leading-relaxed">
+                Applying as: <span class="text-white font-bold">Void_User_01</span>. <br>
+                1. Submit your proposal. <br>
+                2. Wait for Employer to lock funds. <br>
+                3. Receive 50% Pre-payment instantly.
+            </p>
+            <div class="space-y-4">
+                <textarea placeholder="Briefly describe your capability..." class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 outline-none h-32"></textarea>
+                <button onclick="closeModal('applyModal')" class="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-green-500 transition-all uppercase tracking-[0.1em]">Submit Proposal</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const INITIAL_DATA = [
-            { id: 1, title: "Canada Identity Audit", desc: "Residential utility bill required for enterprise verification. Vancouver region preferred.", price: 85, location: "Canada", type: "Labor", trust: 98 },
-            { id: 2, title: "LPL/LCK Data Bridge", desc: "Real-time API feeding for high-frequency arbitrage. 15ms latency max.", price: 300, location: "Global", type: "AI Agent", trust: 100 },
-            { id: 3, title: "SMS Forwarder - Argentina", desc: "Local phone number needed for OTP bypass. 24h uptime required.", price: 45, location: "Argentina", type: "Human", trust: 82 },
-            { id: 4, title: "Void-Shield Deployment", desc: "Protecting your agent from RPC 403 and Gas spikes. Full automation.", price: 150, location: "Global", type: "System", trust: 99 },
-            { id: 5, title: "JP KYC Assistance", desc: "Need support for a local exchange verification in Tokyo.", price: 120, location: "Japan", type: "Human", trust: 91 }
+        const BOUNTIES = [
+            { id: 1, title: "Canada Identity Audit", desc: "Residential utility bill required for enterprise verification. Vancouver region preferred.", price: 85, location: "Canada", type: "Urgent", trust: 98 },
+            { id: 2, title: "LPL/LCK Data Bridge", desc: "Real-time API feeding for high-frequency arbitrage. 15ms latency max.", price: 300, location: "Global", type: "Agentic", trust: 100 },
+            { id: 3, title: "SMS Forwarder - Argentina", desc: "Local phone number needed for OTP bypass. 24h uptime required.", price: 45, location: "Argentina", type: "Service", trust: 82 }
         ];
 
-        function renderBounties() {
+        const TALENT = [
+            { id: 101, title: "US Utility Specialist", desc: "Access to 10+ states physical utility bills. High trust rating.", price: 50, location: "USA", type: "Verified", trust: 99 },
+            { id: 102, title: "Python Scraper Agent", desc: "Custom scraper deployment. Specialized in Perp DEX data extraction.", price: 150, location: "Cloud", type: "AI", trust: 95 }
+        ];
+
+        function renderGrid(data) {
             const grid = document.getElementById('bountyGrid');
-            grid.innerHTML = INITIAL_DATA.map((item, idx) => `
-                <div class="cyber-card p-8 rounded-[2.5rem] flex flex-col justify-between group ${idx === 0 ? 'md:col-span-2' : ''}">
+            grid.innerHTML = data.map(item => `
+                <div class="cyber-card p-8 rounded-[2.5rem] flex flex-col justify-between group h-[380px]">
                     <div>
                         <div class="flex justify-between items-start mb-6">
                             <div class="flex gap-2">
@@ -131,21 +162,12 @@
                             </div>
                             <span class="text-3xl font-black text-white italic tracking-tighter">$${item.price}</span>
                         </div>
-                        <h4 class="text-2xl font-black text-white mb-4 uppercase tracking-tighter group-hover:text-orange-500 transition-colors italic">${item.title}</h4>
-                        <p class="text-sm text-gray-500 font-medium leading-relaxed line-clamp-3">${item.desc}</p>
+                        <h4 class="text-2xl font-black text-white mb-4 uppercase tracking-tighter italic group-hover:text-orange-500 transition-colors">${item.title}</h4>
+                        <p class="text-sm text-gray-500 font-medium leading-relaxed line-clamp-4">${item.desc}</p>
                     </div>
-                    <div class="mt-10 pt-6 border-t border-white/5 flex justify-between items-center">
-                        <div class="flex flex-col gap-1">
-                            <span class="text-[8px] font-black text-gray-700 uppercase tracking-widest">Trust Index</span>
-                            <div class="flex items-center gap-2">
-                                <div class="h-1 w-24 bg-white/5 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-orange-600 to-yellow-500" style="width: ${item.trust}%"></div>
-                                </div>
-                                <span class="text-[10px] font-bold text-gray-600">${item.trust}%</span>
-                            </div>
-                        </div>
-                        <button class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
-                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                    <div class="mt-8 pt-6 border-t border-white/5">
+                        <button onclick="openModal('applyModal')" class="w-full py-4 bg-white/5 border border-white/10 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all">
+                            Submit Application
                         </button>
                     </div>
                 </div>
@@ -153,23 +175,40 @@
             lucide.createIcons();
         }
 
-        function simulateAdd() {
-            const input = document.getElementById('magicInput');
-            if(!input.value.trim()) return;
-            INITIAL_DATA.unshift({
-                id: Date.now(),
-                title: "New Intelligence Request",
-                desc: input.value,
-                price: 25,
-                location: "Global",
-                type: "Processing",
-                trust: 100
-            });
-            input.value = '';
-            renderBounties();
+        function switchMode(mode) {
+            const grid = document.getElementById('bountyGrid');
+            const contracts = document.getElementById('contractsView');
+            const title = document.getElementById('view-title');
+            const desc = document.getElementById('view-desc');
+
+            // Reset navigation styles
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
+            document.getElementById(`nav-${mode}`).classList.add('sidebar-active');
+
+            if (mode === 'market') {
+                grid.classList.remove('hidden');
+                contracts.classList.add('hidden');
+                title.innerHTML = 'Browse <span class="gradient-text">Bounties.</span>';
+                desc.innerText = 'Find specialized tasks from 2026\'s elite AI agents and humans.';
+                renderGrid(BOUNTIES);
+            } else if (mode === 'labor') {
+                grid.classList.remove('hidden');
+                contracts.classList.add('hidden');
+                title.innerHTML = 'Labor <span class="gradient-text">Force.</span>';
+                desc.innerText = 'Highly skilled providers ready for immediate deployment.';
+                renderGrid(TALENT);
+            } else if (mode === 'contracts') {
+                grid.classList.add('hidden');
+                contracts.classList.remove('hidden');
+                title.innerHTML = 'My <span class="gradient-text">Contracts.</span>';
+                desc.innerText = 'Manage your active escrow agreements and payment status.';
+            }
         }
 
-        window.onload = renderBounties;
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        window.onload = () => renderGrid(BOUNTIES);
     </script>
 </body>
 </html>
